@@ -1,3 +1,5 @@
+import { ClientOption } from './lib/types'
+
 export function renderHTML({ title = 'Beeper', body }: { title?: string; body: string }): string {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -57,4 +59,20 @@ export function createOAuthErrorHTML(message: string): string {
     title: 'Invalid Request',
     body: `<h1>Invalid Request</h1><p>${message}</p>`,
   })
+}
+
+export function renderConnectionSuccess(client?: ClientOption): string {
+  const scheme = client === 'claude-desktop' ? 'claude://' : client === 'raycast' ? 'raycast://' : undefined
+  const clientDisplay = client === 'claude-desktop' ? 'Claude Desktop' : client === 'raycast' ? 'Raycast' : 'the MCP client'
+
+  const redirectMeta = scheme ? `<meta http-equiv="refresh" content="0;url=${scheme}">` : ''
+  const redirectScript = scheme ? `\n<script>\n  window.location.href = '${scheme}';\n  window.close();\n</script>` : ''
+  const clientLink = scheme ? `<a href="${scheme}">${clientDisplay}</a>` : clientDisplay
+
+  const body = `${redirectMeta}
+<div class="message">
+  <a href="beeper://">Beeper Desktop</a> is connected. You can now go back to ${clientLink}.
+</div>${redirectScript}`
+
+  return renderHTML({ title: 'Connection successful', body })
 }

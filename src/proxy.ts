@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import './setup'
 
 /**
  * MCP Proxy with OAuth support
@@ -31,8 +32,9 @@ async function runProxy(
   serverUrl: string,
   callbackPort: number,
   headers: Record<string, string>,
-  transportStrategy: TransportStrategy = 'http-first',
+  transportStrategy: TransportStrategy = 'http-only',
   host: string,
+  client: 'claude-desktop' | 'raycast' | undefined,
   staticOAuthClientMetadata: StaticOAuthClientMetadata,
   staticOAuthClientInfo: StaticOAuthClientInformationFull,
   authorizeResource: string,
@@ -46,14 +48,18 @@ async function runProxy(
   const serverUrlHash = getServerUrlHash(serverUrl)
 
   // Create a lazy auth coordinator
-  const authCoordinator = createLazyAuthCoordinator(serverUrlHash, callbackPort, events, authTimeoutMs)
+  const authCoordinator = createLazyAuthCoordinator(serverUrlHash, callbackPort, events, authTimeoutMs, client)
+
+  // Map client to human-readable client name
+  const clientName = client === 'claude-desktop' ? 'Claude Desktop' : client === 'raycast' ? 'Raycast' : 'Unknown MCP Client'
 
   // Create the OAuth client provider
   const authProvider = new NodeOAuthClientProvider({
     serverUrl,
     callbackPort,
     host,
-    clientName: 'Claude Desktop',
+    clientName,
+    clientUri: 'https://github.com/beeper/mcp-remote',
     staticOAuthClientMetadata,
     staticOAuthClientInfo,
     authorizeResource,
@@ -150,8 +156,19 @@ to the CA certificate file. If using claude_desktop_config.json, this might look
   }
 }
 
-// Parse command-line arguments and run the proxy
-parseCommandLineArgs(process.argv.slice(2), 'Usage: npx tsx proxy.ts <https://server-url> [callback-port] [--debug]')
+// Parse command-line arguments and run the proxy with sensible defaults
+const userArgs = process.argv.slice(2)
+
+// Default URL: ${BEEPER_DESKTOP_BASE_URL ?? http://localhost:23373}/v0/mcp
+const baseUrl = (process.env.BEEPER_DESKTOP_BASE_URL || 'http://localhost:23373').replace(/\/$/, '')
+const defaultServerUrl = `${baseUrl}/v0/mcp`
+
+// If no server URL is provided (or first arg is a flag), inject the default URL as the first arg
+const firstArg = userArgs[0]
+const needsDefaultUrl = !firstArg || firstArg.startsWith('-') || !(firstArg.startsWith('http://') || firstArg.startsWith('https://'))
+const processedArgs = needsDefaultUrl ? [defaultServerUrl, ...userArgs] : userArgs
+
+parseCommandLineArgs(processedArgs, 'Usage: npx tsx proxy.ts <https://server-url> [callback-port] [--debug]')
   .then(
     ({
       serverUrl,
@@ -165,14 +182,25 @@ parseCommandLineArgs(process.argv.slice(2), 'Usage: npx tsx proxy.ts <https://se
       authorizeResource,
       ignoredTools,
       authTimeoutMs,
+      client,
+      userSpecifiedTransport,
+      userSpecifiedStaticOAuthClientMetadata,
     }) => {
+      // Defaults only when not explicitly provided
+      const effectiveTransportStrategy = userSpecifiedTransport ? transportStrategy : ('http-only' as TransportStrategy)
+      const effectiveStaticOAuthClientMetadata: StaticOAuthClientMetadata =
+        userSpecifiedStaticOAuthClientMetadata || staticOAuthClientMetadata
+          ? staticOAuthClientMetadata
+          : ({ scope: 'read write' } as StaticOAuthClientMetadata)
+
       return runProxy(
         serverUrl,
         callbackPort,
         headers,
-        transportStrategy,
+        effectiveTransportStrategy,
         host,
-        staticOAuthClientMetadata,
+        client,
+        effectiveStaticOAuthClientMetadata,
         staticOAuthClientInfo,
         authorizeResource,
         ignoredTools,

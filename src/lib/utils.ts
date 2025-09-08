@@ -12,7 +12,7 @@ import {
 } from '@modelcontextprotocol/sdk/shared/auth.js'
 import { OAuthCallbackServerOptions, StaticOAuthClientInformationFull, StaticOAuthClientMetadata } from './types'
 import { getConfigDir, getConfigFilePath, readJsonFile } from './mcp-auth-config'
-import { renderHTML } from '../html'
+import { renderHTML, renderConnectionSuccess } from '../html'
 import express from 'express'
 import net from 'net'
 import crypto from 'crypto'
@@ -513,23 +513,8 @@ export function setupOAuthCallbackServerWithLongPoll(options: OAuthCallbackServe
     log('Auth code received, resolving promise')
     authCompletedResolve(code)
 
-    res.send(
-      renderHTML({
-        title: 'Connection successful',
-        body: `<meta http-equiv="refresh" content="0;url=claude://">
-<div class="message">
-  <a href="beeper://">Beeper Desktop</a> is connected. You can now go back to <a href="claude://">Claude Desktop</a>.
-</div>
-<script>
-  window.location.href = 'claude://';
-
-  // If this is a non-interactive session (no manual approval step was required) then
-  // this should automatically close the window. If not, this will have no effect and
-  // the user will see the message above.
-  window.close();
-</script>`,
-      }),
-    )
+    const client = options.client
+    res.send(renderConnectionSuccess(client))
 
     // Notify main flow that auth code is available
     options.events.emit('auth-code-received', code)
@@ -665,6 +650,7 @@ export async function parseCommandLineArgs(args: string[], usage: string) {
   // Parse transport strategy
   let transportStrategy: TransportStrategy = 'http-first' // Default
   const transportIndex = args.indexOf('--transport')
+  const userSpecifiedTransport = transportIndex !== -1
   if (transportIndex !== -1 && transportIndex < args.length - 1) {
     const strategy = args[transportIndex + 1]
     if (strategy === 'sse-only' || strategy === 'http-only' || strategy === 'sse-first' || strategy === 'http-first') {
@@ -683,8 +669,22 @@ export async function parseCommandLineArgs(args: string[], usage: string) {
     log(`Using callback hostname: ${host}`)
   }
 
+  // Parse client
+  let client: 'claude-desktop' | 'raycast' | undefined
+  const clientIndex = args.indexOf('--client')
+  if (clientIndex !== -1 && clientIndex < args.length - 1) {
+    const value = (args[clientIndex + 1] || '').toLowerCase()
+    if (value === 'claude-desktop' || value === 'raycast') {
+      client = value
+      log(`Using client: ${client}`)
+    } else {
+      log(`Warning: Ignoring invalid client value: ${value}. Valid values are: claude-desktop, raycast`)
+    }
+  }
+
   let staticOAuthClientMetadata: StaticOAuthClientMetadata = null
   const staticOAuthClientMetadataIndex = args.indexOf('--static-oauth-client-metadata')
+  const userSpecifiedStaticOAuthClientMetadata = staticOAuthClientMetadataIndex !== -1
   if (staticOAuthClientMetadataIndex !== -1 && staticOAuthClientMetadataIndex < args.length - 1) {
     const staticOAuthClientMetadataArg = args[staticOAuthClientMetadataIndex + 1]
     if (staticOAuthClientMetadataArg.startsWith('@')) {
@@ -823,6 +823,9 @@ export async function parseCommandLineArgs(args: string[], usage: string) {
     authorizeResource,
     ignoredTools,
     authTimeoutMs,
+    client,
+    userSpecifiedTransport,
+    userSpecifiedStaticOAuthClientMetadata,
   }
 }
 

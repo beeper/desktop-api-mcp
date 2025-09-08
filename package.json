@@ -1,6 +1,6 @@
 {
   "name": "@beeper/mcp-remote",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "stdio support for Beeper Desktop's Streamable HTTP MCP server",
   "keywords": [
     "mcp",

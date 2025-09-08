@@ -24,10 +24,8 @@
       "args": [
         "${__dirname}/proxy.js",
         "${user_config.beeper_desktop_base_url}/v0/mcp",
-        "--transport",
-        "http-only",
-        "--static-oauth-client-metadata",
-        "{ \"scope\": \"read write\" }",
+        "--client",
+        "claude-desktop",
         "--debug"
       ],
       "env": {

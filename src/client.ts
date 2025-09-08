@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import './setup'
 
 /**
  * MCP Client with OAuth support

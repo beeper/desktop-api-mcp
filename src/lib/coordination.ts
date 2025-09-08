@@ -133,6 +133,7 @@ export function createLazyAuthCoordinator(
   callbackPort: number,
   events: EventEmitter,
   authTimeoutMs: number,
+  client?: 'claude-desktop' | 'raycast',
 ): AuthCoordinator {
   let authState: { server: Server; waitForAuthCode: () => Promise<string>; skipBrowserAuth: boolean } | null = null
   const coordinatorId = Math.random().toString(36).substring(7)
@@ -149,7 +150,7 @@ export function createLazyAuthCoordinator(
       debugLog('Initializing auth coordination on-demand', { serverUrlHash, callbackPort })
 
       // Initialize auth using the existing coordinateAuth logic
-      authState = await coordinateAuth(serverUrlHash, callbackPort, events, authTimeoutMs)
+      authState = await coordinateAuth(serverUrlHash, callbackPort, events, authTimeoutMs, client)
       debugLog('Auth coordination completed', { skipBrowserAuth: authState.skipBrowserAuth })
       return authState
     },
@@ -168,6 +169,7 @@ export async function coordinateAuth(
   callbackPort: number,
   events: EventEmitter,
   authTimeoutMs: number,
+  client?: 'claude-desktop' | 'raycast',
 ): Promise<{ server: Server; waitForAuthCode: () => Promise<string>; skipBrowserAuth: boolean }> {
   const sessionId = Math.random().toString(36).substring(7)
   debugLog('Coordinating authentication', { serverUrlHash, callbackPort })
@@ -235,6 +237,7 @@ export async function coordinateAuth(
     events,
     authTimeoutMs,
     serverUrlHash,
+    client,
   })
 
   // Get the actual port the server is running on

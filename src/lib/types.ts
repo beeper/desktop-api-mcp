@@ -47,7 +47,11 @@ export interface OAuthCallbackServerOptions {
   serverUrlHash: string
   /** Poll interval in milliseconds for token readiness checks */
   tokenReadyPollMs?: number
+  /** Optional client application for post-auth UX adjustments */
+  client?: ClientOption
 }
+
+export type ClientOption = 'claude-desktop' | 'raycast'
 
 // optional tatic OAuth client information
 export type StaticOAuthClientMetadata = OAuthClientMetadata | null | undefined
