@@ -499,6 +499,13 @@
     "@types/connect" "*"
     "@types/node" "*"
 
+"@types/bun@^1.2.21":
+  version "1.2.21"
+  resolved "https://registry.yarnpkg.com/@types/bun/-/bun-1.2.21.tgz#a2d555b7908c01c26f6a48407cd6c944d9ec8d12"
+  integrity sha512-NiDnvEqmbfQ6dmZ3EeUO577s4P5bf4HCTXtI6trMc6f6RzirY5IrF3aIookuSpyslFzrnvv2lmEWv5HyC1X79A==
+  dependencies:
+    bun-types "1.2.21"
+
 "@types/chai@^5.2.2":
   version "5.2.2"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-5.2.2.tgz#6f14cea18180ffc4416bc0fd12be05fdd73bdd6b"
@@ -763,6 +770,13 @@ body-parser@^2.2.0:
     qs "^6.14.0"
     raw-body "^3.0.0"
     type-is "^2.0.0"
+
+bun-types@1.2.21:
+  version "1.2.21"
+  resolved "https://registry.yarnpkg.com/bun-types/-/bun-types-1.2.21.tgz#7ccd04d4765d7fabaaef8b2d288150305dff2c56"
+  integrity sha512-sa2Tj77Ijc/NTLS0/Odjq/qngmEPZfbfnOERi0KRUYhT9R8M4VBioWVmMWE5GrYbKMc+5lVybXygLdibHaqVqw==
+  dependencies:
+    "@types/node" "*"
 
 bun@^1.1.0:
   version "1.2.21"
