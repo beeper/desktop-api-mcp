@@ -307,14 +307,14 @@ export async function connectToRemoteServer(
   const sseTransport = transportStrategy === 'sse-only' || transportStrategy === 'sse-first'
   const transport = sseTransport
     ? new SSEClientTransport(url, {
-      authProvider,
-      requestInit: { headers },
-      eventSourceInit,
-    })
+        authProvider,
+        requestInit: { headers },
+        eventSourceInit,
+      })
     : new StreamableHTTPClientTransport(url, {
-      authProvider,
-      requestInit: { headers },
-    })
+        authProvider,
+        requestInit: { headers },
+      })
 
   try {
     debugLog('Attempting to connect to remote server', { sseTransport })
