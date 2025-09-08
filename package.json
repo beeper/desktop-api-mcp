@@ -12,7 +12,7 @@
   "author": "Beeper <support@beeper.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/beeper/desktop-mcp-relayer"
+    "url": "git+https://github.com/beeper/mcp-remote.git"
   },
   "homepage": "https://www.beeper.com/mcp",
   "documentation": "https://developers.beeper.com/desktop-api/mcp",
@@ -25,6 +25,11 @@
   "main": "dist/index.js",
   "bin": {
     "beeper-desktop-mcp": "dist/proxy.js"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true,
+    "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
     "prebuild": "rimraf dist dist-mcpb BeeperDesktop.dxt",
