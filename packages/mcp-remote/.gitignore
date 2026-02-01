@@ -1,0 +1,6 @@
+node_modules
+.mcp-cli
+dist
+dist-mcpb
+BeeperDesktop.dxt
+.claude/settings.local.json

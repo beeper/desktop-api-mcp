@@ -1,71 +1,8 @@
 {
-  "name": "@beeper/mcp-remote",
-  "version": "0.0.2",
-  "description": "stdio support for Beeper Desktop's Streamable HTTP MCP server",
-  "keywords": [
-    "mcp",
-    "stdio",
-    "beeper",
-    "chat",
-    "messages"
-  ],
-  "author": "Beeper <support@beeper.com>",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/beeper/mcp-remote.git"
-  },
-  "homepage": "https://www.beeper.com/mcp",
-  "documentation": "https://developers.beeper.com/desktop-api/mcp",
-  "type": "module",
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE"
-  ],
-  "main": "dist/index.js",
-  "bin": {
-    "beeper-desktop-mcp": "dist/proxy.js"
-  },
-  "publishConfig": {
-    "access": "public",
-    "provenance": true,
-    "registry": "https://registry.npmjs.org/"
-  },
-  "scripts": {
-    "prebuild": "rimraf dist dist-mcpb BeeperDesktop.dxt",
-    "build": "bun build src/client.ts src/proxy.ts --outdir dist --target node --format esm --minify --sourcemap=none",
-    "postbuild": "node build-mcpb.js && dxt pack dist-mcpb BeeperDesktop.dxt",
-    "build:watch": "bun build src/client.ts src/proxy.ts --outdir dist --target node --format esm --minify --sourcemap=none --watch",
-    "check": "prettier --check . && tsc",
-    "lint-fix": "prettier --check . --write",
-    "test:unit": "vitest run",
-    "test:unit:watch": "vitest"
-  },
-  "dependencies": {
-    "express": "^4.21.2",
-    "open": "^10.1.0",
-    "strict-url-sanitise": "^0.0.1",
-    "undici": "^7.12.0",
-    "mcp-remote": "github:geelen/mcp-remote#ce68351da4991bb795c2cccb94bf3649e5843cf4"
-  },
-  "devDependencies": {
-    "@anthropic-ai/dxt": "0.2.6",
-    "@modelcontextprotocol/sdk": "^1.17.3",
-    "@types/bun": "^1.2.21",
-    "@types/express": "^5.0.0",
-    "@types/node": "^22.13.10",
-    "bun": "^1.1.0",
-    "prettier": "^3.5.3",
-    "rimraf": "6.0.1",
-    "tsx": "^4.19.3",
-    "typescript": "^5.8.2",
-    "vitest": "^3.2.3"
-  },
-  "vitest": {
-    "environment": "node",
-    "globals": true,
-    "include": [
-      "src/**/*.test.ts"
-    ]
-  }
+  "name": "mcp-remote-monorepo",
+  "private": true,
+  "packageManager": "yarn@4.12.0",
+  "workspaces": [
+    "packages/*"
+  ]
 }

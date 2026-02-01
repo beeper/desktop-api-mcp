@@ -1,6 +1,12 @@
+.DS_Store
 node_modules
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.pnp.*
 .mcp-cli
-dist
-dist-mcpb
-BeeperDesktop.dxt
 .claude/settings.local.json
+packages/**/dist
+packages/**/dist-mcpb
+*.mcpb
+BeeperDesktop.dxt

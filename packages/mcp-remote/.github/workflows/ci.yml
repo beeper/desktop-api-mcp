@@ -2,12 +2,11 @@ name: CI
 
 on:
   push:
-    branches:
-      - '**'
+    branches: [beeper-main]
   pull_request:
 
 jobs:
-  mcp-remote:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,13 +30,13 @@ jobs:
           bun-version: latest
 
       - name: Typecheck and format check
-        run: yarn workspace @beeper/mcp-remote run check
+        run: yarn run check
 
       - name: Unit tests
-        run: yarn workspace @beeper/mcp-remote run test:unit
+        run: yarn run test:unit
 
       - name: Build (bundles + DXT)
-        run: yarn workspace @beeper/mcp-remote run build
+        run: yarn run build
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -45,6 +44,6 @@ jobs:
           name: beeper-mcp-remote-build
           if-no-files-found: error
           path: |
-            packages/mcp-remote/BeeperDesktop.dxt
-            packages/mcp-remote/dist/**
-            packages/mcp-remote/dist-mcpb/**
+            BeeperDesktop.dxt
+            dist/**
+            dist-mcpb/**
