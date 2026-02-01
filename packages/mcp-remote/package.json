@@ -12,7 +12,7 @@
   "author": "Beeper <support@beeper.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/beeper/mcp-remote.git",
+    "url": "git+https://github.com/beeper/desktop-api-mcp.git",
     "directory": "packages/mcp-remote"
   },
   "homepage": "https://www.beeper.com/mcp",

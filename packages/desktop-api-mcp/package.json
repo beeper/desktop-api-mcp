@@ -8,10 +8,10 @@
   "type": "commonjs",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/beeper/mcp-remote.git",
+    "url": "git+https://github.com/beeper/desktop-api-mcp.git",
     "directory": "packages/desktop-api-mcp"
   },
-  "homepage": "https://github.com/beeper/mcp-remote/tree/main/packages/desktop-api-mcp#readme",
+  "homepage": "https://github.com/beeper/desktop-api-mcp/tree/main/packages/desktop-api-mcp#readme",
   "license": "MIT",
   "packageManager": "yarn@1.22.22",
   "publishConfig": {

@@ -1,5 +1,5 @@
 {
-  "name": "mcp-remote-monorepo",
+  "name": "desktop-api-mcp",
   "private": true,
   "packageManager": "yarn@4.12.0",
   "workspaces": [

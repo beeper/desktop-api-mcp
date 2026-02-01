@@ -9,9 +9,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/beeper/mcp-remote.git"
+    "url": "git+https://github.com/beeper/desktop-api-mcp.git"
   },
-  "homepage": "https://github.com/beeper/mcp-remote/tree/main/packages/desktop-api-mcp#readme",
+  "homepage": "https://github.com/beeper/desktop-api-mcp/tree/main/packages/desktop-api-mcp#readme",
   "documentation": "https://developers.beeper.com/desktop-api/",
   "server": {
     "type": "node",
