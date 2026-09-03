@@ -34,9 +34,11 @@ async function main() {
     fs.copyFileSync(path.join(__dirname, 'icon.png'), path.join(DIST_MCPB_DIR, 'icon.png'))
     console.log('✓ Copied icon.png')
 
-    // Copy dist/proxy.js
-    fs.copyFileSync(path.join(__dirname, 'dist', 'proxy.js'), path.join(DIST_MCPB_DIR, 'proxy.js'))
-    console.log('✓ Copied dist/proxy.js')
+    // Copy the bundle
+    for (const file of fs.readdirSync(path.join(__dirname, 'dist')).filter((f) => f.endsWith('.js'))) {
+      fs.copyFileSync(path.join(__dirname, 'dist', file), path.join(DIST_MCPB_DIR, file))
+      console.log(`✓ Copied dist/${file}`)
+    }
 
     // 4. Create modified package.json
     console.log('Creating modified package.json...')
@@ -56,9 +58,6 @@ async function main() {
     // Remove bin property
     delete modifiedPackageJson.bin
 
-    // Remove vitest property
-    delete modifiedPackageJson.vitest
-
     // Write modified package.json
     fs.writeFileSync(path.join(DIST_MCPB_DIR, 'package.json'), JSON.stringify(modifiedPackageJson, null, 2))
     console.log('✓ Created modified package.json')
@@ -68,7 +67,7 @@ async function main() {
     console.log('\nCopied files:')
     console.log('  - manifest.json')
     console.log('  - icon.png')
-    console.log('  - proxy.js (from dist/proxy.js)')
+    console.log('  - proxy.js (from dist/)')
     console.log('  - package.json (modified)')
   } catch (error) {
     console.error('❌ Error during build process:', error.message)

@@ -2,7 +2,7 @@
   "dxt_version": "0.1",
   "name": "@beeper/mcp-remote",
   "display_name": "Beeper Desktop",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "Beeper Desktop gives Claude access to all your messages and chats across 10+ chat networks. Requires Beeper Desktop to be installed and running on the same device.",
   "author": {
     "name": "Beeper",
@@ -21,13 +21,7 @@
     "entry_point": "proxy.js",
     "mcp_config": {
       "command": "node",
-      "args": [
-        "${__dirname}/proxy.js",
-        "${user_config.beeper_desktop_base_url}/v0/mcp",
-        "--client",
-        "claude-desktop",
-        "--debug"
-      ],
+      "args": ["${__dirname}/proxy.js", "${user_config.beeper_desktop_base_url}/v0/mcp", "--client", "claude-desktop", "--debug"],
       "env": {
         "MCP_REMOTE_CONFIG_DIR": "${__dirname}/.mcp-auth",
         "HOME": "${HOME}"
@@ -49,7 +43,7 @@
       "title": "Beeper Desktop Base URL",
       "description": "Base URL for Beeper Desktop API. You don't need to change this if you're using the default port (23373).",
       "required": false,
-      "default": "http://localhost:23373"
+      "default": "http://127.0.0.1:23373"
     }
   }
 }
