@@ -1,26 +1,19 @@
-# AGENT.md - mcp-remote Development Guide
+# AGENT.md
 
 ## Commands
 
-- **Build**: `pnpm build` (or `pnpm build:watch` for development)
-- **Type check**: `pnpm check` (runs prettier and tsc)
-- **Lint/Format**: `pnpm lint-fix` (prettier with write)
-- **Test**: `pnpm test:unit` (or `pnpm test:unit:watch` for watch mode)
-- **Run dev**: `npx tsx src/client.ts` or `npx tsx src/proxy.ts`
+- **Build**: `yarn build` (bundles `dist/proxy.js`, then packs `BeeperDesktop.dxt`)
+- **Check**: `yarn check` (prettier and tsc)
+- **Format**: `yarn lint-fix`
 
 ## Architecture
 
-- **Project Type**: TypeScript ESM library for MCP (Model Context Protocol) remote proxy
-- **Main Binaries**: `mcp-remote` (proxy.ts), `mcp-remote-client` (client.ts)
-- **Core Libraries**: `/src/lib/` contains auth coordination, OAuth client, utils, types
-- **Transport**: Supports both HTTP and SSE transports with OAuth authentication
-- **Config**: Uses `~/.mcp-auth/` directory for credential storage
+- `src/setup.ts` is the only logic: it applies Beeper's defaults, rewrites `process.argv`, and watches for the parent process going away.
+- `src/proxy.ts` imports `setup` and then upstream's CLI, so everything runs in one process and bun bundles it into one file.
+- `src/authorize.ts` is what upstream gets when it imports `open` (aliased in `build.ts`): Beeper authorize URLs are completed over loopback without a browser, everything else goes to the real `open`.
+- Upstream is pinned in `devDependencies`; update it by bumping the version and rebuilding.
 
 ## Code Style
 
-- **Formatting**: Prettier with 140 char width, single quotes, no semicolons
-- **Types**: Strict TypeScript, ES2022 target with bundler module resolution
-- **Imports**: ES modules, use `.js` extensions for SDK imports
-- **Error Handling**: EventEmitter pattern for auth flow coordination
-- **Naming**: kebab-case for files, camelCase for variables/functions
-- **Comments**: JSDoc for main functions, inline for complex auth flows
+- Prettier with 140 char width, single quotes, no semicolons
+- Strict TypeScript, ES2022 target, bundler module resolution

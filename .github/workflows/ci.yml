@@ -32,9 +32,6 @@ jobs:
       - name: Typecheck and format check
         run: yarn run check
 
-      - name: Unit tests
-        run: yarn run test:unit
-
       - name: Build (bundles + DXT)
         run: yarn run build
 
