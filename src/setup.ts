@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import os from 'node:os'
 import path from 'node:path'
 
@@ -12,6 +13,15 @@ const clientIndex = args.indexOf('--client')
 const client = clients.get(clientIndex === -1 ? '' : (args.splice(clientIndex, 2)[1] ?? ''))
 export const returnTo = client?.returnTo
 if (!/^https?:\/\//.test(args[0] ?? '')) args.unshift(`${baseUrl}/v0/mcp`)
+
+const fetchBlockedPorts = new Set([3659, 4045, 4190, 5060, 5061, 6000, 6566, 6665, 6666, 6667, 6668, 6669, 6679, 6697, 10080])
+if (!/^\d+$/.test(args[1] ?? '')) {
+  let port = 3335 + (parseInt(createHash('md5').update(args[0]).digest('hex').slice(0, 4), 16) % 45816)
+  if (fetchBlockedPorts.has(port)) {
+    while (fetchBlockedPorts.has(port)) port++
+    args.splice(1, 0, String(port))
+  }
+}
 
 const metadata = {
   client_name: client?.name ?? 'Unknown MCP Client',
