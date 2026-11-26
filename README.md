@@ -29,3 +29,21 @@ Bump `mcp-remote` in `devDependencies` and rebuild. Nothing else in this repo tr
 ## Building
 
 `yarn build` produces `dist/proxy.js` and `BeeperDesktop.dxt`.
+
+## Known limitations
+
+### `search_messages` with `chatIDs` (upstream)
+
+When `search_messages` is called with `chatIDs` set, Beeper Desktop's HTTP API
+currently returns at most **one message per chat** and marks the page
+`complete`, even when more messages match the date/query filters. The same
+single-message cap appears on REST
+`/v1/chats/<id>/messages` — so the truncation happens in the Desktop server,
+not in this stdio proxy (which only forwards MCP traffic).
+
+**Workaround:** omit `chatIDs`, paginate with `accountIDs` (and optional date
+range / `query`), then filter the returned messages by chat ID on the client.
+Cursor/`direction` pagination works in that mode.
+
+Tracked upstream in [desktop-api-mcp#2](https://github.com/beeper/desktop-api-mcp/issues/2).
+
